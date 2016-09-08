@@ -1,0 +1,3 @@
+[submodule "src/github.com/coreos/dex"]
+	path = src/github.com/coreos/dex
+	url = https://github.com/coreos/dex.git

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -eu
+
+export PATH=${PATH}:/var/vcap/packages/dex/bin
+
+<% unless p('dex.worker.no_db') %>
+# Register connectors
+dexctl \
+  --db-url="<%= p('dex.worker.db_url') %>" \
+  <% if p('dex.worker.log_debug') %> \
+  --log-debug \
+  <% end %> \
+  set-connector-configs \
+  "/var/vcap/jobs/dex_worker/config/connectors.json"
+<% end %>
+
+exit 0

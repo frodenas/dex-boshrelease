@@ -1,0 +1,31 @@
+---
+name: dex_overlord
+
+packages:
+  - dex
+
+templates:
+  bin/dex_overlord_ctl: bin/dex_overlord_ctl
+
+consumes:
+  - name: dex
+    type: dex_worker
+
+properties:
+  dex.overlord.admin_api_secret:
+    description: "A base64-encoded 128 byte string which is used to protect the Admin API"
+  dex.overlord.admin_port:
+    description: "port for listening for administrative operation requests"
+    default: 5557
+  dex.overlord.gc_interval:
+    description: "length of time between garbage collection runs"
+  dex.overlord.key_period:
+    description: "length of time for-which a given key will be valid"
+  dex.overlord.local_connector:
+    description: "ID of the local connector"
+  dex.overlord.log_debug:
+    description: "log debug-level information"
+    default: false
+  dex.overlord.log_timestamps:
+    description: "prefix log lines with timestamps"
+    default: true

@@ -1,0 +1,58 @@
+#!/bin/bash
+
+set -eu
+
+RUN_DIR=/var/vcap/sys/run/dex_overlord
+LOG_DIR=/var/vcap/sys/log/dex_overlord
+TMP_DIR=/var/vcap/sys/tmp/dex_overlord
+STORE_DIR=/var/vcap/store/dex_overlord
+mkdir -p ${RUN_DIR} ${LOG_DIR} ${TMP_DIR} ${STORE_DIR}
+
+PIDFILE=${RUN_DIR}/dex_overlord.pid
+
+source /var/vcap/packages/dex/common/utils.sh
+
+export PATH=${PATH}:/var/vcap/packages/dex/bin
+
+case $1 in
+  start)
+    pid_guard ${PIDFILE} "dex_overlord"
+    echo $$ > ${PIDFILE}
+
+    exec dex-overlord \
+      <% if_p('dex.overlord.admin_api_secret') do |admin_api_secret| %> \
+      -admin-api-secret="<%= admin_api_secret %>" \
+      <% end %> \
+      -admin-listen="http://127.0.0.1:<%= p('dex.overlord.admin_port') %>" \
+      -db-url="<%= link('dex').p('dex.worker.db_url') %>" \
+      <% if_p('dex.overlord.gc_interval') do |gc_interval| %> \
+      -gc-interval="<%= gc_interval %>" \
+      <% end %> \
+      <% if_p('dex.overlord.key_period') do |key_period| %> \
+      -key-period="<%= key_period %>" \
+      <% end %> \
+      -key-secrets="<%= link('dex').p('dex.worker.key_secrets') %>" \
+      <% if_p('dex.overlord.local_connector') do |local_connector| %> \
+      -local-connector="<%= local_connector %>" \
+      <% end %> \
+      <% if p('dex.overlord.log_debug') %> \
+      -log-debug \
+      <% end %> \
+      <% if p('dex.overlord.log_timestamps') %> \
+      -log-timestamps \
+      <% end %> \
+      >>  ${LOG_DIR}/dex_overlord.stdout.log \
+      2>> ${LOG_DIR}/dex_overlord.stderr.log
+    ;;
+
+  stop)
+    kill_and_wait ${PIDFILE}
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+  ;;
+
+esac
+exit 0

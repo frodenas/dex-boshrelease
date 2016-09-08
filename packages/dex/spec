@@ -1,0 +1,9 @@
+---
+name: dex
+
+dependencies:
+  - golang
+
+files:
+  - common/utils.sh
+  - github.com/coreos/dex/**/*
