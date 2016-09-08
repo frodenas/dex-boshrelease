@@ -1,0 +1,30 @@
+---
+packages:
+- name: dex
+  version: e5544ee52b2457000f8b7c5428b516cc89911689
+  fingerprint: e5544ee52b2457000f8b7c5428b516cc89911689
+  sha1: d39bc37d760911b9bc5e17953793e856874b2139
+  dependencies:
+  - golang
+- name: golang
+  version: 4075637395ec818ae1876d9cb786155c704fb3c7
+  fingerprint: 4075637395ec818ae1876d9cb786155c704fb3c7
+  sha1: d976f4a91f5d582a0930ab58657291e60ccd50ee
+  dependencies: []
+jobs:
+- name: dex_overlord
+  version: 42cba4afb1e98b2c0f2f3be695489bf2150e477d
+  fingerprint: 42cba4afb1e98b2c0f2f3be695489bf2150e477d
+  sha1: 811686a3e26cf833fae318863d7b7b2fd91d3e50
+- name: dex_worker
+  version: 1cbe310557e89b48068f66c4b8d636a4a5c87ca0
+  fingerprint: 1cbe310557e89b48068f66c4b8d636a4a5c87ca0
+  sha1: 1247003dcebdf466510eb50e685e31bbde365f0b
+license:
+  version: 99711acad6032fe4c7f657779849ad9400497bf5
+  fingerprint: 99711acad6032fe4c7f657779849ad9400497bf5
+  sha1: 338c1101d667a8342c419a12cb45e63affdd6b48
+commit_hash: 1e6a7519
+uncommitted_changes: true
+name: dex
+version: '1'
