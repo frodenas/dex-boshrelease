@@ -1,0 +1,129 @@
+---
+name: dex
+
+packages:
+  - dex
+
+templates:
+  bin/dex_ctl: bin/dex_ctl
+  config/dex.yml: config/dex.yml
+  config/grpc_tls_cert.pem: config/grpc_tls_cert.pem
+  config/grpc_tls_client_ca.pem: config/grpc_tls_client_ca.pem
+  config/grpc_tls_key.pem: config/grpc_tls_key.pem
+  config/kubeconfig: config/kubeconfig
+  config/postgres_tls_ca.pem: config/postgres_tls_ca.pem
+  config/postgres_tls_cert.pem: config/postgres_tls_cert.pem
+  config/postgres_tls_key.pem: config/postgres_tls_key.pem
+  config/web_tls_cert.pem: config/web_tls_cert.pem
+  config/web_tls_key.pem: config/web_tls_key.pem
+
+provides:
+  - name: dex
+    type: oidc
+
+consumes:
+  - name: database
+    type: database
+    optional: true
+
+properties:
+  dex.issuer:
+    description: "The base path of dex and the external name of the OpenID Connect service"
+
+  dex.storage.type:
+    description: "Storage type (kubernetes, memory, postgres, sqlite3)"
+    default: "sqlite3"
+
+  dex.storage.kubernetes.kubeconfig:
+    description: "Kubernetes configuration"
+
+  dex.storage.postgres.host:
+    description: "PostgreSQL host"
+  dex.storage.postgres.port:
+    description: "PostgreSQL port"
+  dex.storage.postgres.user:
+    description: "PostgreSQL user"
+  dex.storage.postgres.password:
+    description: "PostgreSQL password"
+  dex.storage.postgres.database:
+    description: "PostgreSQL database"
+  dex.storage.postgres.connection_timeout:
+    description: "PostgreSQL connection timeout"
+  dex.storage.postgres.tls_mode:
+    description: "PostgreSQL TLS mode"
+    default: "disable"
+  dex.storage.postgres.tls_ca:
+    description: "PostgreSQL TLS CA (PEM format)"
+  dex.storage.postgres.tls_cert:
+    description: "PostgreSQL TLS certificate (PEM format)"
+  dex.storage.postgres.tls_key:
+    description: "PostgreSQL TLS private key (PEM format)"
+
+  dex.web.http_port:
+    description: "Web HTTP port"
+    default: 5556
+  dex.web.https_port:
+    description: "Web HTTPS port"
+    default: 5554
+  dex.web.tls_cert:
+    description: "Web TLS certificate (PEM format)"
+  dex.web.tls_key:
+    description: "Web TLS private key (PEM format)"
+  dex.web.allowed_origins:
+    description: "Array of allowed origins"
+
+  dex.oauth2.response_types:
+    description: "Response types to enable"
+    example: "['code', 'token', 'id_token']"
+  dex.oauth2.skip_approval_screen:
+    description: "Enable/Disable prompt the user to approve client authorization. The act of logging in implies authorization"
+
+  dex.grpc.http_port:
+    description: "gRPC port"
+    default: 5557
+  dex.grpc.tls_cert:
+    description: "gRPC TLS certificate (PEM format)"
+  dex.grpc.tls_key:
+    description: "gRPC TLS private key (PEM format)"
+  dex.grpc.tls_client_ca:
+    description: "gRPC TLS client ca (PEM format)"
+
+  dex.expiry.signing_keys:
+    description: "Duration of time after which the SigningKeys will be rotated"
+    example: "6h"
+  dex.expiry.id_tokens:
+    description: "Duration of time for which the IdTokens will be valid"
+    example: "24h"
+
+  dex.log.level:
+    description: "Log level"
+    default: info
+  dex.log.format:
+    description: "Log format"
+
+  dex.connectors:
+    description: "Connectors configuration"
+    example:
+      - type: mockCallback
+        id: mock
+        name: Example
+
+  dex.static_clients:
+    description: "Static list of clients"
+    example:
+      - id: example-app # Client ID used to identify the client
+        secret: ZXhhbXBsZS1hcHAtc2VjcmV0 # Client secret used to identify the client
+        redirectURIs:
+          - http://127.0.0.1:5555/callback
+        name: Example App # Name used when displaying this client to the end user
+
+  dex.enable_password_db:
+    description: "Enable/Disable a list of passwords which can be used to login to dex"
+
+  dex.static_passwords:
+    description: "Static list of passwords to login the end user"
+    example:
+      - email: admin@example.com
+        hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W" # Bcrypt encoded hash of the password
+        username: admin # Optional username to display
+        userID: 08a8684b-db88-4b73-90a9-3cd1661f5466 # Randomly generated user ID

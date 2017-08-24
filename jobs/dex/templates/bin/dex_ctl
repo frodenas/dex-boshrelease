@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -eu
+
+RUN_DIR=/var/vcap/sys/run/dex
+LOG_DIR=/var/vcap/sys/log/dex
+TMP_DIR=/var/vcap/sys/tmp/dex
+STORE_DIR=/var/vcap/store/dex
+mkdir -p ${RUN_DIR} ${LOG_DIR} ${TMP_DIR} ${STORE_DIR}
+
+PIDFILE=${RUN_DIR}/dex.pid
+
+source /var/vcap/packages/dex/common/utils.sh
+
+export PATH=${PATH}:/var/vcap/packages/dex/bin
+
+case $1 in
+  start)
+    pid_guard ${PIDFILE} "dex"
+    echo $$ > ${PIDFILE}
+
+    exec dex serve /var/vcap/jobs/dex/config/dex.yml \
+      >>  ${LOG_DIR}/dex.stdout.log \
+      2>> ${LOG_DIR}/dex.stderr.log
+    ;;
+
+  stop)
+    kill_and_wait ${PIDFILE}
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+  ;;
+
+esac
+exit 0

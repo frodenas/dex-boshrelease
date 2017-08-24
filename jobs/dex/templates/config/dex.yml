@@ -1,0 +1,111 @@
+<%=
+config = {
+  'issuer' => p('dex.issuer', "http://#{spec.ip}:#{p('dex.web.http_port')}"),
+  'storage' => {
+    'type' => p('dex.storage.type'),
+    'config' => {},
+  },
+  'web' => {
+    'http' => "#{spec.ip}:#{p('dex.web.http_port')}",
+  },
+  'oauth2' => {},
+  'grpc' => {
+    'addr' => "#{spec.ip}:#{p('dex.grpc.http_port')}",
+  },
+  'expiry' => {},
+  'logger' => {
+    'level' => p('dex.log.level'),
+  },
+  'frontend' => {
+    'dir' => '/var/vcap/packages/dex/web',
+  },
+  'connectors' => p('dex.connectors'),
+  'staticClients' => p('dex.static_clients', []),
+  'staticPasswords' => p('dex.static_passwords', []),
+}
+
+if p('dex.storage.type') == 'memory'
+elsif p('dex.storage.type') == 'kubernetes'
+  config['storage']['config'] = {
+    'inCluster' => false,
+    'kubeConfigFile' => '/var/vcap/jobs/dex/config/kubeconfig',
+  }
+elsif p('dex.storage.type') == 'postgres'
+  postgres_host = nil
+  if_p('dex.storage.postgres.host') do |host|
+    postgres_host = host
+  end.else do
+    postgres_host = link('database').instances.first.address
+  end
+
+  config['storage']['config'] = {
+    'host' => "#{postgres_host}:#{p('dex.storage.postgres.port')}",
+    'user' => p('dex.storage.postgres.user'),
+    'password' => p('dex.storage.postgres.password'),
+    'database' => p('dex.storage.postgres.database'),
+    'ssl' => {
+      'mode' => p('dex.storage.postgres.tls_mode'),
+    },
+  }
+
+  if_p('dex.storage.postgres.connection_timeout') do |connection_timeout|
+    config['storage']['config']['connection_timeout'] = connection_timeout
+  end
+
+  if_p('dex.storage.postgres.tls_cert', 'dex.storage.postgres.tls_key') do
+    config['storage']['config']['ssl']['cert_file'] = '/var/vcap/jobs/dex/config/postgres_tls_cert.pem'
+    config['storage']['config']['ssl']['key_file'] = '/var/vcap/jobs/dex/config/postgres_tls_key.pem'
+    if_p('dex.storage.postgres.tls_ca') do
+      config['storage']['config']['ssl']['ca_file'] = '/var/vcap/jobs/dex/config/postgres_tls_ca.pem'
+    end
+  end
+elsif p('dex.storage.type') == 'sqlite3'
+  config['storage']['config'] = {
+    'file' => '/var/vcap/store/dex/dex.db',
+  }
+else
+  raise "Storage type #{p('dex.storage.type')} not supported"
+end
+
+if_p('dex.web.tls_cert', 'dex.web.tls_key') do
+  config['web']['https'] = "#{spec.ip}:#{p('dex.web.https_port')}"
+  config['web']['tlsCert'] = '/var/vcap/jobs/dex/config/web_tls_cert.pem'
+  config['web']['tlsKey'] = '/var/vcap/jobs/dex/config/web_tls_key.pem'
+end
+
+if_p('dex.web.allowed_origins') do |allowed_origins|
+  config['web']['allowedOrigins'] = allowed_origins
+end
+
+if_p('dex.oauth2.response_types') do |response_types|
+  config['oauth2']['responseTypes'] = response_types
+end
+if_p('dex.oauth2.skip_approval_screen') do |skip_approval_screen|
+  config['oauth2']['skipApprovalScreen'] = skip_approval_screen
+end
+
+if_p('dex.grpc.tls_cert', 'dex.grpc.tls_key') do
+  config['grpc']['tlsCert'] = '/var/vcap/jobs/dex/config/grpc_tls_cert.pem'
+  config['grpc']['tlsKey'] = '/var/vcap/jobs/dex/config/grpc_tls_key.pem'
+  if_p('dex.grpc.tls_client_ca') do
+    config['grpc']['tlsClientCA'] = '/var/vcap/jobs/dex/config/grpc_tls_client_ca.pem'
+  end
+end
+
+if_p('dex.expiry.signing_keys') do |signing_keys|
+  config['expiry']['signingKeys'] = signing_keys
+end
+if_p('dex.expiry.id_tokens') do |id_tokens|
+  config['expiry']['idTokens'] = id_tokens
+end
+
+if_p('dex.log.format') do |log_format|
+  config['logger']['format'] = log_format
+end
+
+if_p('dex.enable_password_db') do |enable_password_db|
+  config['enablePasswordDB'] = enable_password_db
+end
+
+YAML.dump(config)
+%>

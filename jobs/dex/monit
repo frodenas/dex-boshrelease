@@ -1,0 +1,5 @@
+check process dex
+  with pidfile /var/vcap/sys/run/dex/dex.pid
+  start program "/var/vcap/jobs/dex/bin/dex_ctl start"
+  stop program "/var/vcap/jobs/dex/bin/dex_ctl stop"
+  group vcap
