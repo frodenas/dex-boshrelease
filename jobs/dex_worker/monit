@@ -1,5 +1,0 @@
-check process dex_worker
-  with pidfile /var/vcap/sys/run/dex_worker/dex_worker.pid
-  start program "/var/vcap/jobs/dex_worker/bin/dex_worker_ctl start"
-  stop program "/var/vcap/jobs/dex_worker/bin/dex_worker_ctl stop"
-  group vcap

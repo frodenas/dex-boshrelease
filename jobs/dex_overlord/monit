@@ -1,5 +1,0 @@
-check process dex_overlord
-  with pidfile /var/vcap/sys/run/dex_overlord/dex_overlord.pid
-  start program "/var/vcap/jobs/dex_overlord/bin/dex_overlord_ctl start"
-  stop program "/var/vcap/jobs/dex_overlord/bin/dex_overlord_ctl stop"
-  group vcap
