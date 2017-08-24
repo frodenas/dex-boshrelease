@@ -7,19 +7,18 @@ mkdir -p ${BOSH_INSTALL_TARGET}/common
 cp -a ${BOSH_COMPILE_TARGET}/common/* ${BOSH_INSTALL_TARGET}/common
 
 # Build dex package
-export GOROOT=$(readlink -nf /var/vcap/packages/golang)
+export GOROOT=/var/vcap/packages/golang_dex/go
 export PATH=${GOROOT}/bin:${PATH}
 
+VERSION=v2.6.1
 PACKAGE_NAME=github.com/coreos/dex
 mkdir -p ${BOSH_INSTALL_TARGET}/src/${PACKAGE_NAME}
 cp -a ${BOSH_COMPILE_TARGET}/${PACKAGE_NAME}/* ${BOSH_INSTALL_TARGET}/src/${PACKAGE_NAME}
 export GOPATH=${BOSH_INSTALL_TARGET}
 
-for DEXCMD in "dex-worker" "dexctl" "dex-overlord"; do
-  go install ${PACKAGE_NAME}/cmd/${DEXCMD}
-done
+go install -v -ldflags "-w -X $(PACKAGE_NAME)/version.Version=$(VERSION)" ${PACKAGE_NAME}/cmd/dex
 
-mkdir -p ${BOSH_INSTALL_TARGET}/static
-cp -a ${BOSH_COMPILE_TARGET}/${PACKAGE_NAME}/static/* ${BOSH_INSTALL_TARGET}/static
+mkdir -p ${BOSH_INSTALL_TARGET}/web
+cp -a ${BOSH_COMPILE_TARGET}/${PACKAGE_NAME}/web/* ${BOSH_INSTALL_TARGET}/web
 
 rm -rf ${BOSH_INSTALL_TARGET}/pkg ${BOSH_INSTALL_TARGET}/src

@@ -2,7 +2,7 @@
 name: dex
 
 dependencies:
-  - golang
+  - golang_dex
 
 files:
   - common/utils.sh
