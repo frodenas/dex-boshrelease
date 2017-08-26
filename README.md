@@ -2,64 +2,64 @@
 
 This is a [BOSH](http://bosh.io/) release for [Dex](https://github.com/coreos/dex).
 
-## Disclaimer
-
-This is NOT presently a production ready BOSH release. This is a work in progress. It is suitable for experimentation and may not become supported in the future.
-
 ## Usage
 
-### Upload the BOSH release
+### Requirements
 
-To use this BOSH release, first upload it to your BOSH:
+In order to use this BOSH release you will need:
+
+* [BOSH CLI v2](https://bosh.io/docs/cli-v2.html)
+* An already deployed [BOSH environment](http://bosh.io/docs/init.html)
+* A compatible [cloud-config](http://bosh.io/docs/terminology.html#cloud-config) with a `default` option for `network` and `vm_types` (you can use the example that comes from [cf-deployment](https://github.com/cloudfoundry/cf-deployment/blob/master/bosh-lite/cloud-config.yml))
+
+###  Clone the repository
+
+First, clone this repository into your workspace:
 
 ```
-bosh target BOSH_HOST
-git clone https://github.com/frodenas/dex-boshrelease.git
+git clone https://github.com/frodenas/dex-boshrelease
 cd dex-boshrelease
-bosh upload release releases/dex/dex-1.yml
+export BOSH_ENVIRONMENT=<name>
 ```
 
-### Create a BOSH deployment manifest
+### Basic deployment
 
-Now create a deployment file (using the files at the [examples](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/) directory as a starting point).
-
-### Deploy using the BOSH deployment manifest
-
-Using the previous created deployment manifest, now we can deploy it:
+To deploy a basic `dex` server use the following command:
 
 ```
-bosh deployment path/to/deployment.yml
-bosh -n deploy
+bosh -d dex deploy manifests/dex.yml \
+  --vars-store tmp/deployment-vars.yml
 ```
+
+### Operations files
+
+Additional [operations files](http://bosh.io/docs/cli-ops-files.html) are located at the [manifests/operators](https://github.com/frodenas/dex-boshrelease/tree/master/manifests/operators) directory. Those files includes a basic configuration, so extra ops files might be needed for additional configuration.
+
+Please review the op files before deploying them to check the requeriments, dependencies and necessary variables.
+
+| File | Description |
+| ---- | ----------- |
+| [add_static_ips.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/add_static_ips.yml) | Adds a static IP to dex |
+| [connector_github.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_github.yml) | Add a [Github](https://github.com/coreos/dex/blob/master/Documentation/github-connector.md) connector |
+| [connector_gitlab.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_gitlab.yml) | Adds a [Gitlab](https://github.com/coreos/dex/blob/master/Documentation/gitlab-connector.md) connector |
+| [connector_oidc.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_oidc.yml) | Adds an [OpenID Connect](https://github.com/coreos/dex/blob/master/Documentation/oidc-connector.md) connector |
+| [connector_uaa.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_uaa.yml) | Add a [Cloud Foundry UAA](https://docs.cloudfoundry.org/concepts/architecture/uaa.html) connector |
+| [storage_kubernetes.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/storage_kubernetes.yml) | Uses a Kubernetes ThirdPartyResource to persist state |
+| [storage_postgres.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/storage_postgres.yml) | Uses a PostgreSQL database to persist state |
+| [storage_sqlite3.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/storage_sqlite3.yml) | Uses a SQLite3 database to persist state |
+| [use_ssl.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/use_ssl.yml) | Enables dex TLS (web & grpc) |
+
+### Deployment variables and the var-store
+
+Some operators files requires additional information to provide environment-specific or sensitive configuration such as various credentials. To do this in the default configuration, we use the `--vars-store`. This flag takes the name of a `yml` file that it will read and write to. Where necessary credential values are not present, it will generate new values based on the type information stored at the different deployment files. Necessary variables that BOSH can't generate need to be supplied as well.
+See each particular op files you're using for any additional necessary variables.
+
+See also the [BOSH CLI documentation](http://bosh.io/docs/cli-int.html#value-sources) for more information about ways to supply such additional variables.
 
 ## Contributing
 
-In the spirit of [free software](http://www.fsf.org/licensing/essays/free-sw.html), **everyone** is encouraged to help improve this project.
+Refer to [CONTRIBUTING.md](https://github.com/frodenas/dex-boshrelease/blob/master/CONTRIBUTING.md).
 
-Here are some ways *you* can contribute:
+## License
 
-* by using alpha, beta, and prerelease versions
-* by reporting bugs
-* by suggesting new features
-* by writing or editing documentation
-* by writing specifications
-* by writing code (**no patch is too small**: fix typos, add comments, clean up inconsistent whitespace)
-* by refactoring code
-* by closing [issues](https://github.com/frodenas/dex-boshrelease/issues)
-* by reviewing patches
-
-### Submitting an Issue
-
-We use the [GitHub issue tracker](https://github.com/frodenas/dex-boshrelease/issues) to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted. You can indicate support for an existing issue by voting it up. When submitting a bug report, please include a [Gist](http://gist.github.com/) that includes a stack trace and any details that may be necessary to reproduce the bug,. Ideally, a bug report should include a pull request with failing specs.
-
-### Submitting a Pull Request
-
-1. Fork the project.
-2. Create a topic branch.
-3. Implement your feature or bug fix.
-4. Commit and push your changes.
-5. Submit a pull request.
-
-## Copyright
-
-Copyright (c) 2016 Ferran Rodenas. See [LICENSE](https://github.com/frodenas/dex-boshrelease/blob/master/LICENSE) for details.
+Apache License 2.0, see [LICENSE](https://github.com/frodenas/dex-boshrelease/blob/master/LICENSE).
