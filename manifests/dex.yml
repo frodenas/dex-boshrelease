@@ -33,4 +33,6 @@ stemcells:
 
 releases:
   - name: dex
-    version: latest
+    version: 2
+    url: https://bosh.io/d/github.com/frodenas/dex-boshrelease?v=2
+    sha1: f209f3341c36ead4d0e82276a17583bd71b56894
