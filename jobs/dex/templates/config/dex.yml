@@ -25,6 +25,7 @@ config = {
 }
 
 if p('dex.storage.type') == 'memory'
+# noop
 elsif p('dex.storage.type') == 'kubernetes'
   config['storage']['config'] = {
     'inCluster' => false,
