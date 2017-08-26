@@ -78,7 +78,7 @@ properties:
   dex.oauth2.skip_approval_screen:
     description: "Enable/Disable prompt the user to approve client authorization. The act of logging in implies authorization"
 
-  dex.grpc.http_port:
+  dex.grpc.port:
     description: "gRPC port"
     default: 5557
   dex.grpc.tls_cert:

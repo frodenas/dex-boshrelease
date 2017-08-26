@@ -10,7 +10,7 @@ config = {
   },
   'oauth2' => {},
   'grpc' => {
-    'addr' => "#{spec.ip}:#{p('dex.grpc.http_port')}",
+    'addr' => "#{spec.ip}:#{p('dex.grpc.port')}",
   },
   'expiry' => {},
   'logger' => {
