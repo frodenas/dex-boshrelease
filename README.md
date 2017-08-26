@@ -40,10 +40,10 @@ Please review the op files before deploying them to check the requeriments, depe
 | File | Description |
 | ---- | ----------- |
 | [add_static_ips.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/add_static_ips.yml) | Adds a static IP to dex |
-| [connector_github.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_github.yml) | Add a [Github](https://github.com/coreos/dex/blob/master/Documentation/github-connector.md) connector |
+| [connector_github.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_github.yml) | Adds a [Github](https://github.com/coreos/dex/blob/master/Documentation/github-connector.md) connector |
 | [connector_gitlab.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_gitlab.yml) | Adds a [Gitlab](https://github.com/coreos/dex/blob/master/Documentation/gitlab-connector.md) connector |
 | [connector_oidc.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_oidc.yml) | Adds an [OpenID Connect](https://github.com/coreos/dex/blob/master/Documentation/oidc-connector.md) connector |
-| [connector_uaa.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_uaa.yml) | Add a [Cloud Foundry UAA](https://docs.cloudfoundry.org/concepts/architecture/uaa.html) connector |
+| [connector_uaa.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/connector_uaa.yml) | Adds a [Cloud Foundry UAA](https://docs.cloudfoundry.org/concepts/architecture/uaa.html) connector |
 | [storage_kubernetes.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/storage_kubernetes.yml) | Uses a Kubernetes ThirdPartyResource to persist state |
 | [storage_postgres.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/storage_postgres.yml) | Uses a PostgreSQL database to persist state |
 | [storage_sqlite3.yml](https://github.com/frodenas/dex-boshrelease/blob/master/manifests/operators/storage_sqlite3.yml) | Uses a SQLite3 database to persist state |
