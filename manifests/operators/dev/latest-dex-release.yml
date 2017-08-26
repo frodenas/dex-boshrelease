@@ -1,0 +1,5 @@
+- type: replace
+  path: /releases/name=dex
+  value:
+    name: dex
+    version: latest

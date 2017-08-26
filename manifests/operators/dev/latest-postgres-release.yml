@@ -1,0 +1,5 @@
+- type: replace
+  path: /releases/name=postgres
+  value:
+    name: postgres
+    version: latest

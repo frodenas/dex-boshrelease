@@ -1,0 +1,48 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: postgres
+    url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=20
+    version: "20"
+    sha1: 3f378bcab294e20316171d4e656636df88763664
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: postgres
+    azs:
+      - z1
+    instances: 1
+    vm_type: default
+    persistent_disk_type: 10GB
+    stemcell: default
+    networks:
+      - name: default
+    jobs:
+      - name: postgres
+        release: postgres
+        properties:
+          databases:
+            port: 5432
+            databases:
+              - name: dex
+                citext: true
+            roles:
+              - name: dex
+                password: ((postgres_dex_password))
+
+- type: replace
+  path: /instance_groups/name=dex/jobs/name=dex/properties/dex/storage?
+  value:
+    type: postgres
+    postgres:
+      port: 5432
+      user: dex
+      password: ((postgres_dex_password))
+      database: dex
+
+- type: replace
+  path: /variables/-
+  value:
+    name: postgres_dex_password
+    type: password

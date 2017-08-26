@@ -1,0 +1,14 @@
+# Apply ./cf/add-dex-uaa-clients.yml to your cf-deployment based Cloud Foundry
+# Requires ./use_ssl.yml
+
+- type: replace
+  path: /instance_groups/name=dex/jobs/name=dex/properties/dex/connectors/-
+  value:
+    type: oidc
+    name: Cloud Foundry UAA
+    id: uaa
+    config:
+      issuer: https://uaa.((system_domain))
+      clientID: dex
+      clientSecret: ((uaa_clients_dex_secret))
+      redirectURI: https://((dex_issuer_or_static_ip)):5554/callback

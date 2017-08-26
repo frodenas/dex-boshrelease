@@ -1,0 +1,10 @@
+- type: replace
+  path: /instance_groups/name=dex/jobs/name=dex/properties/dex/connectors/-
+  value:
+    type: github
+    name: ((github_connector_name))
+    id: ((github_connector_id))
+    config:
+      clientID: ((github_connector_client_id))
+      clientSecret: ((github_connector_client_secret))
+      redirectURI: ((github_connector_redirect_uri))

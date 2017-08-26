@@ -1,0 +1,8 @@
+- type: replace
+  path: /instance_groups/name=dex/persistent_disk_type?
+  value: 1GB
+
+- type: replace
+  path: /instance_groups/name=dex/jobs/name=dex/properties/dex/storage?
+  value:
+    type: sqlite3

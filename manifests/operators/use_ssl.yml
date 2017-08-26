@@ -1,0 +1,34 @@
+- type: replace
+  path: /instance_groups/name=dex/jobs/name=dex/properties/dex/web?
+  value:
+    tls_cert: ((dex_cert.certificate))
+    tls_key: ((dex_cert.private_key))
+
+- type: replace
+  path: /instance_groups/name=dex/jobs/name=dex/properties/dex/grpc?
+  value:
+    tls_cert: ((dex_cert.certificate))
+    tls_key: ((dex_cert.private_key))
+    tls_client_ca: ((dex_cert.ca))
+
+- type: replace
+  path: /variables?/name=dex_ca?
+  value:
+    name: dex_ca
+    type: certificate
+    options:
+      is_ca: true
+      common_name: dex_ca
+
+- type: replace
+  path: /variables?/name=dex_cert?
+  value:
+    name: dex_cert
+    type: certificate
+    options:
+      ca: dex_ca
+      common_name: ((dex_issuer_or_static_ip))
+      alternative_names: [((dex_issuer_or_static_ip))]
+      extended_key_usage:
+        - client_auth
+        - server_auth

@@ -1,0 +1,11 @@
+- type: replace
+  path: /instance_groups/name=dex/jobs/name=dex/properties/dex/connectors/-
+  value:
+    type: gitlab
+    name: ((gitlab_connector_name))
+    id: ((gitlab_connector_id))
+    config:
+      baseURL: ((gitlab_connector_base_url))
+      clientID: ((gitlab_connector_client_id))
+      clientSecret: ((gitlab_connector_client_secret))
+      redirectURI: ((gitlab_connector_redirect_uri))

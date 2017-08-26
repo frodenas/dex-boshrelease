@@ -1,0 +1,11 @@
+- type: replace
+  path: /instance_groups/name=dex/jobs/name=dex/properties/dex/connectors/-
+  value:
+    type: oidc
+    name: ((oidc_connector_name))
+    id: ((oidc_connector_id))
+    config:
+      issuer: ((oidc_connector_issuer))
+      clientID: ((oidc_connector_client_id))
+      clientSecret: ((oidc_connector_client_secret))
+      redirectURI: ((oidc_connector_redirect_uri))
